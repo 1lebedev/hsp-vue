@@ -11,12 +11,6 @@
         <vue-slider v-model="l" v-bind="sliderOptions"></vue-slider>
       </div>
 
-      <!-- <div class="formControl">
-        <div class="controlTitle">Colours amount {{colorsAmount}}</div>
-        <div class="controlElement">
-          <vue-slider v-model="colorsAmount" v-bind="colorsSliderOptions"></vue-slider>
-        </div>
-      </div>-->
       <div class="formControl">
         <div class="controlTitle">Chroma +{{opacity}}</div>
         <div class="controlElement">
@@ -42,11 +36,9 @@
 
 <script>
 // import { store } from "./store.js";
-import Color from "./components/Color.vue";
+import Color from "../components/Color.vue";
 import ColorSpaces from "color-space";
 import VueSlider from "vue-slider-component";
-// import FormControl from "./components/FormControl.vue";
-// import ColorInterpolate from "color-interpolate";
 
 export default {
   name: "app",

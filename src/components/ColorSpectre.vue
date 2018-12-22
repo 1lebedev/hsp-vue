@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="color-spectre">
     <div class="formWrapper">
       <!-- <button @click="increaseColorAmountBy(10)">More colors!</button> -->
       <div class="formControl">

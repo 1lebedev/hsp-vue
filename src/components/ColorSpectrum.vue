@@ -1,5 +1,5 @@
 <template>
-  <div id="color-spectre">
+  <div class="color-spectre">
     <div class="formWrapper">
       <!-- <button @click="increaseColorAmountBy(10)">More colors!</button> -->
       <div class="formControl">
@@ -41,7 +41,7 @@ import ColorSpaces from "color-space";
 import VueSlider from "vue-slider-component";
 
 export default {
-  name: "app",
+  name: "ColorSpectrum",
   components: {
     Color,
     VueSlider
@@ -171,16 +171,6 @@ export default {
 </script>
 
 <style>
-@import "https://cdn.rawgit.com/h-ibaldo/Raleway_Fixed_Numerals/master/css/rawline.css";
-
-#app {
-  font-family: "rawline", Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: left;
-  color: #999;
-  font-size: 13px;
-}
 
 .colorsArray {
   display: flex;
@@ -191,11 +181,6 @@ export default {
   top: 0;
   z-index: 2;
   width: 100%;
-}
-
-body {
-  margin: 0;
-  padding: 0;
 }
 
 .formWrapper {

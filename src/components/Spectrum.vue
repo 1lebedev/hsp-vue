@@ -3,16 +3,17 @@
     <div class="formWrapper">
       <!-- <button @click="increaseColorAmountBy(10)">More colors!</button> -->
       <div class="formControl">
-        Saturation {{this.s}}
-        <vue-slider v-model="s" v-bind="sliderOptions"></vue-slider>
-      </div>
-      <div class="formControl">
-        Lightness {{this.l}}
+        <div class="controlTitle" v-bind:style="{color: sliderProcessColor}">Lightness {{this.l}}</div>
         <vue-slider v-model="l" v-bind="sliderOptions"></vue-slider>
       </div>
 
       <div class="formControl">
-        <div class="controlTitle">Chroma +{{opacity}}</div>
+        <div class="controlTitle" v-bind:style="{color: sliderProcessColor}">Saturation {{this.s}}</div>
+        <vue-slider v-model="s" v-bind="sliderOptions"></vue-slider>
+      </div>
+
+      <div class="formControl">
+        <div class="controlTitle" v-bind:style="{color: sliderProcessColor}">Chroma +{{opacity}}</div>
         <div class="controlElement">
           <vue-slider v-model="opacity" v-bind="opacitySliderOptions"></vue-slider>
         </div>
@@ -20,30 +21,30 @@
     </div>
 
     <div class="colorsArray">
-      <Color v-for="color in colors" v-bind:key="color.index" v-bind:rgbColor="color.RGBfromHPLuv"></Color>
+      <SpectrumColor v-for="color in colors" v-bind:key="color.index" v-bind:rgbColor="color.RGBfromHPLuv"></SpectrumColor>
     </div>
     <div class="colorsArray chroma" v-bind:style="{ opacity: opacity}">
-      <Color
+      <SpectrumColor
         v-for="color in colors"
         v-bind:key="color.index"
         v-bind:rgbColor="color.RGBfromHSLuv"
         v-bind:isChromaExtremum="color.isChromaExtremum"
         v-bind:lightness="l"
-      ></Color>
+      ></SpectrumColor>
     </div>
   </div>
 </template>
 
 <script>
 // import { store } from "./store.js";
-import Color from "../components/Color.vue";
+import SpectrumColor from "../components/SpectrumColor.vue";
 import ColorSpaces from "color-space";
 import VueSlider from "vue-slider-component";
 
 export default {
   name: "ColorSpectrum",
   components: {
-    Color,
+    SpectrumColor,
     VueSlider
   },
   computed: {
@@ -110,7 +111,55 @@ export default {
       set(newColorsAmount) {
         this.dataColorsAmount = newColorsAmount;
       }
-    }
+    },
+    sliderProcessColor: function() {
+      return this.l < 60 ? "#ffffff" : "#000000";
+    },
+    sliderOptions: function() {
+    return {
+        min: 0,
+        max: 100,
+        interval: 1,
+        show: true,
+        tooltip: false,
+        height: 2,
+        processStyle: {
+          backgroundColor: this.sliderProcessColor
+        },
+        bgStyle: {
+          backgroundColor: this.sliderProcessColor + "33"
+        }
+      }},
+      colorsSliderOptions: function() {
+        return {
+            min: 0,
+            max: 360,
+            interval: 1,
+            show: true,
+            tooltip: false,
+            height: 2,
+            processStyle: {
+              backgroundColor: this.sliderProcessColor
+            },
+            bgStyle: {
+              backgroundColor: this.sliderProcessColor + "33"
+            }
+          }},
+      opacitySliderOptions: function() {
+        return {
+            min: 0,
+            max: 1,
+            interval: 0.05,
+            show: true,
+            tooltip: false,
+            height: 2,
+            processStyle: {
+              backgroundColor: this.sliderProcessColor
+            },
+            bgStyle: {
+              backgroundColor: this.sliderProcessColor + "33"
+            }
+      }}
   },
   methods: {
     increaseColorAmountBy(increment) {
@@ -122,49 +171,7 @@ export default {
       s: 100,
       l: 70,
       opacity: 1,
-      dataColorsAmount: 360,
-      sliderOptions: {
-        min: 0,
-        max: 100,
-        interval: 1,
-        show: true,
-        tooltip: false,
-        height: 2,
-        processStyle: {
-          backgroundColor: "#4d4d4d"
-        },
-        bgStyle: {
-          backgroundColor: "#cccccc"
-        }
-      },
-      colorsSliderOptions: {
-        min: 0,
-        max: 360,
-        interval: 1,
-        show: true,
-        tooltip: false,
-        height: 2,
-        processStyle: {
-          backgroundColor: "#4d4d4d"
-        },
-        bgStyle: {
-          backgroundColor: "#cccccc"
-        }
-      },
-      opacitySliderOptions: {
-        min: 0,
-        max: 1,
-        interval: 0.05,
-        show: true,
-        tooltip: false,
-        height: 2,
-        processStyle: {
-          backgroundColor: "#4d4d4d"
-        },
-        bgStyle: {
-          backgroundColor: "#cccccc"
-        }
-      }
+      dataColorsAmount: 360
     };
   }
 };
@@ -174,37 +181,41 @@ export default {
 
 .colorsArray {
   display: flex;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
 }
 
 .colorsArray.chroma {
-  position: absolute;
-  top: 0;
-  z-index: 2;
-  width: 100%;
+  z-index: 2;  
 }
 
 .formWrapper {
   position: absolute;
-  width: 400px;
   z-index: 3;
-  background: #fff;
-  max-width: 200px;
-  text-align: center;
   margin: auto;
-  padding: 20px 24px 24px;
-  border-radius: 8px;
-  box-shadow: 0 2px 12px #00000033;
-  bottom: 10%;
-  left: 50%;
-  transform: translate(-50%, 0);
+  top: 92px;
+  left: 36px;
+  display: flex;
 }
 
 .formControl {
   margin-top: 8px;
-  font-weight: 500;
   color: #000;
+  font-size: 1em;
+  line-height: 1.3em;
+  font-weight: 600;
   text-align: left;
+  flex-grow: 1;
+  min-width: 150px;
+  margin-right: 16px;
 }
+
+.controlTitle {
+  padding: 16px 8px 4px;
+}
+
 .vue-slider-component .vue-slider-dot .vue-slider-dot-handle {
   box-shadow: 0 2px 6px 1px rgba(0, 0, 0, 0.2);
 }

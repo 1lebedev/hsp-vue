@@ -24,19 +24,19 @@
 </template>
 
 <script>
-import ColorSpectrum from "./components/ColorSpectrum.vue";
+import Spectrum from "./components/Spectrum.vue";
 import Palette from "./components/Palette.vue";
 
 export default {
   name: "app",
   components: {
-    ColorSpectrum,
+    Spectrum,
     Palette
   },
   data: function()  {
     return {
     currentTab: 'Palette',
-    tabs: ['Palette', 'Color-Spectrum']
+    tabs: ['Palette', 'Spectrum']
     }
   },
   computed: {
@@ -70,8 +70,8 @@ body {
   border-radius: 4px;
   cursor: pointer;
   background: transparent;
-  color: #666;
   outline: none;
+  color: #666;
   font-size: 1em;
   line-height: 1.3em;
   font-weight: 600;
@@ -92,9 +92,9 @@ body {
 }
 
 .button-group {
-      position: absolute;
+    position: absolute;
     top: 24px;
-    left: 32px;
+    left: 28px;
     padding: 4px;
     border-radius: 4px;
     background: #fff;
@@ -108,7 +108,7 @@ body {
 }
 
 .tab {
-  padding-top: 72px;
+  padding: 96px 44px;
 }
 
 .fade-enter-active, .fade-leave-active {

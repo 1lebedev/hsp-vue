@@ -1,26 +1,27 @@
 <template>
-  <div id="app" v-bind:class="'mode-' + currentTabComponent">
-    <div class="button-group">
-      <button
-        v-for="tab in tabs"
-        v-bind:key="tab"
-        v-bind:class="['tab-button', { active: currentTab === tab }]"
-        v-on:click="currentTab = tab">
-        {{ tab }}
-      </button>
+  <div
+    id="app"
+    v-bind:class="'mode-' + currentTabComponent"
+    v-bind:style="{backgroundColor: '#' + backgroundColor}"
+  >
+    <div class="sticky-header" v-bind:style="{backgroundColor: '#' + backgroundColor}">
+      <div class="button-group">
+        <button
+          v-for="tab in tabs"
+          v-bind:key="tab"
+          v-bind:class="['tab-button', { active: currentTab === tab }]"
+          v-on:click="currentTab = tab"
+        >{{ tab }}</button>
+      </div>
     </div>
 
-<transition name="fade">
-  <keep-alive>
-    <component
-      v-bind:is="currentTabComponent"
-      class="tab">
-    </component>
-  </keep-alive>
-</transition>
-
-
-  </div> <!--app end -->
+    <transition name="fade">
+      <keep-alive>
+        <component v-bind:is="currentTabComponent" class="tab"></component>
+      </keep-alive>
+    </transition>
+  </div>
+  <!--app end -->
 </template>
 
 <script>
@@ -33,15 +34,18 @@ export default {
     Spectrum,
     Palette
   },
-  data: function()  {
+  data: function() {
     return {
-    currentTab: 'Palette',
-    tabs: ['Palette', 'Spectrum']
-    }
+      currentTab: "Palette",
+      tabs: ["Palette", "Spectrum"]
+    };
   },
   computed: {
-    currentTabComponent: function () {
+    currentTabComponent: function() {
       return this.currentTab.toLowerCase();
+    },
+    backgroundColor() {
+      return this.$store.state.backgroundColor;
     }
   }
 };
@@ -59,9 +63,17 @@ export default {
   font-size: 12px;
 }
 
+html,
+body,
+#app {
+  min-height: 100%;
+}
+
+html,
 body {
   margin: 0;
   padding: 0;
+  height: 100%;
 }
 
 .tab-button {
@@ -75,7 +87,7 @@ body {
   font-size: 1em;
   line-height: 1.3em;
   font-weight: 600;
-  transition: all ease-out .3s;
+  transition: all ease-out 0.3s;
 }
 
 .tab-button:hover {
@@ -92,14 +104,14 @@ body {
 }
 
 .button-group {
-    position: absolute;
-    top: 24px;
-    left: 28px;
-    padding: 4px;
-    border-radius: 4px;
-    background: #fff;
-    box-shadow: 0 2px 6px 0 #00000033;
-    z-index: 9999;
+  /* position: fixed; */
+  top: 24px;
+  left: 28px;
+  padding: 4px;
+  border-radius: 4px;
+  background: #fff;
+  box-shadow: 0 2px 6px 0 #00000033;
+  z-index: 9999;
 }
 
 .mode-palette .button-group {
@@ -111,11 +123,25 @@ body {
   padding: 96px 44px;
 }
 
-.fade-enter-active, .fade-leave-active {
-  transition: opacity .3s;
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s;
 }
 .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
   opacity: 0;
 }
 
+.sticky-header {
+  position: fixed;
+  top: 0px;
+  width: 100%;
+  padding: 24px 24px;
+  box-sizing: border-box;
+  z-index: 9000;
+  display: flex;
+}
+
+.mode-spectrum .sticky-header {
+  background: transparent !important;
+}
 </style>

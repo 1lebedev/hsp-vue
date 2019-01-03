@@ -1,36 +1,34 @@
 <template>
   <div class="palette">
-      <PaletteColor
-      v-for="color in colors"
-        v-bind:key="color.index+1"
-        v-bind:color="color"></PaletteColor>
-        <button @click="add">Add color</button>
+    <BackgroundColorInput></BackgroundColorInput>
+
+    <PaletteColor v-for="color in paletteColors" v-bind:key="color.index+1" v-bind:color="color"></PaletteColor>
+    <button @click="add">Add color</button>
   </div>
 </template>
 
 <script>
-
 import PaletteColor from "../components/PaletteColor.vue";
+import BackgroundColorInput from "../components/BackgroundColorInput.vue";
 
 export default {
   name: "Palette",
   components: {
-    PaletteColor
+    PaletteColor,
+    BackgroundColorInput
   },
   computed: {
-    colors() {
-       return this.$store.state.colorsPalette
+    paletteColors() {
+      return this.$store.state.colorsPalette;
     }
   },
   methods: {
     add: function() {
-      this.$store.commit('addColor')
+      this.$store.commit("addColor");
     }
   }
 };
 </script>
 
 <style scoped>
-
-
 </style>

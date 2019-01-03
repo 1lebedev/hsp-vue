@@ -1,42 +1,31 @@
-<template>
-  <div class="color-spectre">
-    <div class="formWrapper">
-      <!-- <button @click="increaseColorAmountBy(10)">More colors!</button> -->
-      <div class="formControl">
-        <div class="controlTitle" v-bind:style="{color: sliderProcessColor}">Lightness {{this.l}}</div>
-        <vue-slider v-model="l" v-bind="sliderOptions"></vue-slider>
-      </div>
+<template lang="pug">
+.color-spectre
+  .formWrapper
+    .formControl
+      .controlTitle(v-bind:style="{color: sliderProcessColor}") Lightness {{this.l}}
+      vue-slider(v-model="l" v-bind="sliderOptions")
 
-      <div class="formControl">
-        <div class="controlTitle" v-bind:style="{color: sliderProcessColor}">Saturation {{this.s}}</div>
-        <vue-slider v-model="s" v-bind="sliderOptions"></vue-slider>
-      </div>
+    .formControl
+      .controlTitle(v-bind:style="{color: sliderProcessColor}") Saturation {{this.s}}
+      vue-slider(v-model="s" v-bind="sliderOptions")
 
-      <div class="formControl">
-        <div class="controlTitle" v-bind:style="{color: sliderProcessColor}">Chroma +{{opacity}}</div>
-        <div class="controlElement">
-          <vue-slider v-model="opacity" v-bind="opacitySliderOptions"></vue-slider>
-        </div>
-      </div>
-    </div>
+    .formControl
+      .controlTitle(v-bind:style="{color: sliderProcessColor}") Chroma +{{opacity}}
+      .controlElement
+        vue-slider(v-model="opacity" v-bind="opacitySliderOptions")
 
-    <div class="colorsArray">
-      <SpectrumColor v-for="color in colors" v-bind:key="color.index" v-bind:rgbColor="color.RGBfromHPLuv"></SpectrumColor>
-    </div>
-    <div class="colorsArray chroma" v-bind:style="{ opacity: opacity}">
-      <SpectrumColor
-        v-for="color in colors"
-        v-bind:key="color.index"
-        v-bind:rgbColor="color.RGBfromHSLuv"
-        v-bind:isChromaExtremum="color.isChromaExtremum"
-        v-bind:lightness="l"
-      ></SpectrumColor>
-    </div>
-  </div>
+  .colorsArray
+    SpectrumColor(v-for="color in colors" v-bind:key="color.index" v-bind:rgbColor="color.RGBfromHPLuv")
+  .colorsArray.chroma(v-bind:style="{ opacity: opacity}")
+    SpectrumColor(
+      v-for="color in colors"
+      v-bind:key="color.index"
+      v-bind:rgbColor="color.RGBfromHSLuv"
+      v-bind:isChromaExtremum="color.isChromaExtremum"
+      v-bind:lightness="l")
 </template>
 
 <script>
-// import { store } from "./store.js";
 import SpectrumColor from "../components/SpectrumColor.vue";
 import ColorSpaces from "color-space";
 import VueSlider from "vue-slider-component";
@@ -116,7 +105,7 @@ export default {
       return this.l < 60 ? "#ffffff" : "#000000";
     },
     sliderOptions: function() {
-    return {
+      return {
         min: 0,
         max: 100,
         interval: 1,
@@ -129,37 +118,40 @@ export default {
         bgStyle: {
           backgroundColor: this.sliderProcessColor + "33"
         }
-      }},
-      colorsSliderOptions: function() {
-        return {
-            min: 0,
-            max: 360,
-            interval: 1,
-            show: true,
-            tooltip: false,
-            height: 2,
-            processStyle: {
-              backgroundColor: this.sliderProcessColor
-            },
-            bgStyle: {
-              backgroundColor: this.sliderProcessColor + "33"
-            }
-          }},
-      opacitySliderOptions: function() {
-        return {
-            min: 0,
-            max: 1,
-            interval: 0.05,
-            show: true,
-            tooltip: false,
-            height: 2,
-            processStyle: {
-              backgroundColor: this.sliderProcessColor
-            },
-            bgStyle: {
-              backgroundColor: this.sliderProcessColor + "33"
-            }
-      }}
+      };
+    },
+    colorsSliderOptions: function() {
+      return {
+        min: 0,
+        max: 360,
+        interval: 1,
+        show: true,
+        tooltip: false,
+        height: 2,
+        processStyle: {
+          backgroundColor: this.sliderProcessColor
+        },
+        bgStyle: {
+          backgroundColor: this.sliderProcessColor + "33"
+        }
+      };
+    },
+    opacitySliderOptions: function() {
+      return {
+        min: 0,
+        max: 1,
+        interval: 0.05,
+        show: true,
+        tooltip: false,
+        height: 2,
+        processStyle: {
+          backgroundColor: this.sliderProcessColor
+        },
+        bgStyle: {
+          backgroundColor: this.sliderProcessColor + "33"
+        }
+      };
+    }
   },
   methods: {
     increaseColorAmountBy(increment) {
@@ -178,7 +170,6 @@ export default {
 </script>
 
 <style>
-
 .colorsArray {
   display: flex;
   position: absolute;
@@ -188,7 +179,7 @@ export default {
 }
 
 .colorsArray.chroma {
-  z-index: 2;  
+  z-index: 2;
 }
 
 .formWrapper {

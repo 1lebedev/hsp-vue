@@ -8,6 +8,7 @@
   .color-prop Eq C = {{currentColorProperties.equalizedChroma}}
   .color-prop C = {{currentColorProperties.c}}
   .color-prop S = {{currentColorProperties.s}}
+  vue-slider(v-model="currentS" v-bind="sliderOptions")
   .color-prop L = {{currentColorProperties.l}}
   .color-prop P = {{currentColorProperties.p}}
 </template>
@@ -16,9 +17,13 @@
 <script>
 import ColorSpaces from "color-space";
 import ColorConvert from "color-convert";
+import VueSlider from "vue-slider-component";
 
 export default {
   name: "PaletteColor",
+  components: {
+    VueSlider
+  },
   props: {
     color: Object
   },
@@ -76,6 +81,41 @@ export default {
         p: HSPColorProperties[2],
         equalizedChroma: HPLuvColorChroma,
         equalizedColor: equalizedColor
+      };
+    },
+    currentS: {
+      get() {
+        return this.currentColorProperties.s;
+      },
+      set(value) {
+        const newHex = ColorConvert.rgb.hex(
+          ColorSpaces.hsluv.rgb([
+            this.currentColorProperties.h,
+            value,
+            this.currentColorProperties.l
+          ])
+        );
+        this.$store.commit("changePaletteColor", {
+          index: this.color.index,
+          hex: newHex
+        });
+      }
+    },
+    sliderOptions: function() {
+      return {
+        min: 0,
+        max: 100,
+        interval: 1,
+        show: true,
+        tooltip: false,
+        width: 100,
+        height: 2,
+        processStyle: {
+          backgroundColor: "000000"
+        },
+        bgStyle: {
+          backgroundColor: "00000033"
+        }
       };
     }
   }

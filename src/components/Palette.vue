@@ -1,10 +1,8 @@
-<template>
-  <div class="palette">
-    <BackgroundColorInput></BackgroundColorInput>
-
-    <PaletteColor v-for="color in paletteColors" v-bind:key="color.index+1" v-bind:color="color"></PaletteColor>
-    <button @click="add">Add color</button>
-  </div>
+<template lang="pug">
+.palette
+  BackgroundColorInput
+  PaletteColor(v-for="color in paletteColors" v-bind:key="color.index+1" v-bind:color="color")
+  button(@click="add") Add color
 </template>
 
 <script>

@@ -4,13 +4,20 @@
   .colorCircle(v-bind:style="{backgroundColor: '#' + currentHex}")
   .hexInput
     input(v-model="currentHex" placeholder="Enter HEX")
-  .color-prop H = {{currentColorProperties.h}}
+  .color-prop H = {{currentH}}
+    vue-slider(v-model="currentH" v-bind="sliderOptionsHue")
+  .color-prop S = {{currentS}}
+    vue-slider(v-model="currentS" v-bind="sliderOptions")
+  .color-prop L = {{currentL}}
+    vue-slider(v-model="currentL" v-bind="sliderOptions")
+  button(@click="setMaxChromaL") Optimize L
+  .color-prop Eq S = {{currentSEqualized}}
+    vue-slider(v-model="currentSEqualized" v-bind="sliderOptions")
   .color-prop Eq C = {{currentColorProperties.equalizedChroma}}
   .color-prop C = {{currentColorProperties.c}}
-  .color-prop S = {{currentColorProperties.s}}
-  vue-slider(v-model="currentS" v-bind="sliderOptions")
-  .color-prop L = {{currentColorProperties.l}}
   .color-prop P = {{currentColorProperties.p}}
+  .color-prop maxChromaL = {{currentColorProperties.maxChromaL}}
+  
 </template>
 
 
@@ -30,9 +37,10 @@ export default {
   computed: {
     currentHex: {
       get() {
-        return this.$store.state.colorsPalette[this.color.index].hex;
+        return ColorConvert.rgb.hex(ColorSpaces.hsluv.rgb([this.color.h, this.color.s, this.color.l]))
       },
       set(value) {
+        // const hex = 
         this.$store.commit("changePaletteColor", {
           index: this.color.index,
           hex: value
@@ -40,16 +48,69 @@ export default {
         //  alert(value)
       }
     },
-    currentColorProperties() {
-      const currentRGB = ColorConvert.hex.rgb(this.currentHex);
-      // LCH PROPERTIES
+    currentH: {
+      get() {
+        return this.$store.state.colorsPalette[this.color.index].h
+      },
+      set(value) {
+        this.$store.commit("changePaletteHSLuv", {
+          index: this.color.index,
+          h: value,
+          s: this.color.s,
+          l: this.color.l
+        });
+      }
+    },
 
+    currentS: {
+      get() {
+        return this.$store.state.colorsPalette[this.color.index].s
+      },
+      set(value) {
+        this.$store.commit("changePaletteHSLuv", {
+          index: this.color.index,
+          h: this.color.h,
+          s: value,
+          l: this.color.l
+        });
+      }
+    },
+
+    currentL: {
+      get() {
+        return this.$store.state.colorsPalette[this.color.index].l
+      },
+      set(value) {
+        this.$store.commit("changePaletteHSLuv", {
+          index: this.color.index,
+          h: this.color.h,
+          s: this.color.s,
+          l: value
+        });
+      }
+    },
+
+    currentSEqualized: {
+      get() {
+        const treshold = this.currentColorProperties.equalizedColorSaturation;
+        const s = Math.round((this.color.s - treshold)/(100-treshold)*100)
+        return s;
+      },
+      set(value) {
+
+      }
+    },
+    currentColorProperties() {
+
+      const currentRGB = ColorConvert.hex.rgb(this.currentHex);
+      
+      // Chroma (from LCH)
       let LCHuvColorProperties = ColorSpaces.rgb.lchuv(currentRGB);
       LCHuvColorProperties = LCHuvColorProperties.map(LCHuvColorProperties =>
         Math.round(LCHuvColorProperties)
       );
 
-      // HSP PROPERTIES
+      // P (from HSP)
 
       let HSPColorProperties = ColorSpaces.rgb.hsp(currentRGB);
 
@@ -59,47 +120,42 @@ export default {
         Math.round(HSPColorProperties)
       );
 
-      // HPLuv
+      // Equalized color (HPLuv) & equalized chroma
 
       const HPLuvColor = ColorSpaces.hpluv.rgb([
-        LCHuvColorProperties[2],
-        HSPColorProperties[1],
-        LCHuvColorProperties[0]
+        this.color.h,
+        this.color.s,
+        this.color.l
       ]);
 
-      const HPLuvColorChroma = Math.round(ColorSpaces.rgb.lchuv(HPLuvColor)[1]);
-
       const equalizedColor = ColorConvert.rgb.hex(HPLuvColor);
+      const HPLuvColorChroma = Math.round(ColorSpaces.rgb.lchuv(HPLuvColor)[1]);
+      const HPLuvColorSaturation = Math.round(ColorSpaces.rgb.hsluv(HPLuvColor)[1]);
 
-      // MAKING ARRAY
+      // L with maximum Chroma
+
+      let maxChroma = 0;
+      let maxChromaL = 0;
+      for (let index = 0; index < 100; index++) {
+        let chroma = ColorSpaces.hsluv.lchuv([this.color.h, 100, index])[1];
+        if (chroma > maxChroma) {
+          maxChroma = chroma;
+        }
+        else {
+          if (maxChromaL == 0 && index != 0) {
+          maxChromaL = index-1;
+          }
+        }
+      }
 
       return {
-        l: LCHuvColorProperties[0],
         c: LCHuvColorProperties[1],
-        h: LCHuvColorProperties[2],
-        s: HSPColorProperties[1],
         p: HSPColorProperties[2],
+        equalizedColor: equalizedColor,
         equalizedChroma: HPLuvColorChroma,
-        equalizedColor: equalizedColor
+        equalizedColorSaturation: HPLuvColorSaturation,
+        maxChromaL: maxChromaL
       };
-    },
-    currentS: {
-      get() {
-        return this.currentColorProperties.s;
-      },
-      set(value) {
-        const newHex = ColorConvert.rgb.hex(
-          ColorSpaces.hsluv.rgb([
-            this.currentColorProperties.h,
-            value,
-            this.currentColorProperties.l
-          ])
-        );
-        this.$store.commit("changePaletteColor", {
-          index: this.color.index,
-          hex: newHex
-        });
-      }
     },
     sliderOptions: function() {
       return {
@@ -117,8 +173,36 @@ export default {
           backgroundColor: "00000033"
         }
       };
+    },
+    sliderOptionsHue: function() {
+      return {
+        min: 0,
+        max: 360,
+        interval: 1,
+        show: true,
+        tooltip: false,
+        width: 100,
+        height: 2,
+        processStyle: {
+          backgroundColor: "000000"
+        },
+        bgStyle: {
+          backgroundColor: "00000033"
+        }
+      };
     }
+
+  },
+methods: {
+  setMaxChromaL: function() {
+    this.$store.commit("changePaletteHSLuv", {
+          index: this.color.index,
+          h: this.color.h,
+          s: this.color.s,
+          l: this.currentColorProperties.maxChromaL
+        });
   }
+}
 };
 </script>
 

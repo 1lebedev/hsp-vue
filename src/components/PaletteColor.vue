@@ -10,13 +10,12 @@
     vue-slider(v-model="currentS" v-bind="sliderOptions")
   .color-prop L = {{currentL}}
     vue-slider(v-model="currentL" v-bind="sliderOptions")
-  button(@click="setMaxChromaL") Optimize L
+  button(@click="setMaxChromaL") Optimize L ({{currentColorProperties.maxChromaL}})
   .color-prop Eq S = {{currentSEqualized}}
     vue-slider(v-model="currentSEqualized" v-bind="sliderOptions")
   .color-prop Eq C = {{currentColorProperties.equalizedChroma}}
   .color-prop C = {{currentColorProperties.c}}
   .color-prop P = {{currentColorProperties.p}}
-  .color-prop maxChromaL = {{currentColorProperties.maxChromaL}}
   
 </template>
 
@@ -37,10 +36,12 @@ export default {
   computed: {
     currentHex: {
       get() {
-        return ColorConvert.rgb.hex(ColorSpaces.hsluv.rgb([this.color.h, this.color.s, this.color.l]))
+        return ColorConvert.rgb.hex(
+          ColorSpaces.hsluv.rgb([this.color.h, this.color.s, this.color.l])
+        );
       },
       set(value) {
-        // const hex = 
+        // const hex =
         this.$store.commit("changePaletteColor", {
           index: this.color.index,
           hex: value
@@ -50,7 +51,7 @@ export default {
     },
     currentH: {
       get() {
-        return this.$store.state.colorsPalette[this.color.index].h
+        return this.$store.state.colorsPalette[this.color.index].h;
       },
       set(value) {
         this.$store.commit("changePaletteHSLuv", {
@@ -64,7 +65,7 @@ export default {
 
     currentS: {
       get() {
-        return this.$store.state.colorsPalette[this.color.index].s
+        return this.$store.state.colorsPalette[this.color.index].s;
       },
       set(value) {
         this.$store.commit("changePaletteHSLuv", {
@@ -78,7 +79,7 @@ export default {
 
     currentL: {
       get() {
-        return this.$store.state.colorsPalette[this.color.index].l
+        return this.$store.state.colorsPalette[this.color.index].l;
       },
       set(value) {
         this.$store.commit("changePaletteHSLuv", {
@@ -93,17 +94,16 @@ export default {
     currentSEqualized: {
       get() {
         const treshold = this.currentColorProperties.equalizedColorSaturation;
-        const s = Math.round((this.color.s - treshold)/(100-treshold)*100)
+        const s = Math.round(
+          ((this.color.s - treshold) / (100 - treshold)) * 100
+        );
         return s;
       },
-      set(value) {
-
-      }
+      set(value) {}
     },
     currentColorProperties() {
-
       const currentRGB = ColorConvert.hex.rgb(this.currentHex);
-      
+
       // Chroma (from LCH)
       let LCHuvColorProperties = ColorSpaces.rgb.lchuv(currentRGB);
       LCHuvColorProperties = LCHuvColorProperties.map(LCHuvColorProperties =>
@@ -130,7 +130,9 @@ export default {
 
       const equalizedColor = ColorConvert.rgb.hex(HPLuvColor);
       const HPLuvColorChroma = Math.round(ColorSpaces.rgb.lchuv(HPLuvColor)[1]);
-      const HPLuvColorSaturation = Math.round(ColorSpaces.rgb.hsluv(HPLuvColor)[1]);
+      const HPLuvColorSaturation = Math.round(
+        ColorSpaces.rgb.hsluv(HPLuvColor)[1]
+      );
 
       // L with maximum Chroma
 
@@ -140,10 +142,9 @@ export default {
         let chroma = ColorSpaces.hsluv.lchuv([this.color.h, 100, index])[1];
         if (chroma > maxChroma) {
           maxChroma = chroma;
-        }
-        else {
+        } else {
           if (maxChromaL == 0 && index != 0) {
-          maxChromaL = index-1;
+            maxChromaL = index - 1;
           }
         }
       }
@@ -191,18 +192,17 @@ export default {
         }
       };
     }
-
   },
-methods: {
-  setMaxChromaL: function() {
-    this.$store.commit("changePaletteHSLuv", {
-          index: this.color.index,
-          h: this.color.h,
-          s: this.color.s,
-          l: this.currentColorProperties.maxChromaL
-        });
+  methods: {
+    setMaxChromaL: function() {
+      this.$store.commit("changePaletteHSLuv", {
+        index: this.color.index,
+        h: this.color.h,
+        s: this.color.s,
+        l: this.currentColorProperties.maxChromaL
+      });
+    }
   }
-}
 };
 </script>
 
@@ -232,9 +232,10 @@ input {
   margin-bottom: 8px;
 }
 .colorCircle {
-  min-width: 32px;
+  min-width: 96px;
+  margin-right: 8px;
   min-height: 32px;
-  border-radius: 50%;
+  border-radius: 4px;
   display: inline-block;
 }
 

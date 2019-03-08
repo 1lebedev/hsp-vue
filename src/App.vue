@@ -27,22 +27,24 @@
 <script>
 import Spectrum from "./components/Spectrum.vue";
 import Palette from "./components/Palette.vue";
+import EqualizedPalette from "./components/EqualizedPalette.vue";
 
 export default {
   name: "app",
   components: {
     Spectrum,
-    Palette
+    Palette,
+    EqualizedPalette
   },
   data: function() {
     return {
       currentTab: "Palette",
-      tabs: ["Palette", "Spectrum"]
+      tabs: ["Palette", "EqualizedPalette", "Spectrum"]
     };
   },
   computed: {
     currentTabComponent: function() {
-      return this.currentTab.toLowerCase();
+      return this.currentTab;
     },
     backgroundColor() {
       return this.$store.state.backgroundColor;

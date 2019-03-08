@@ -9,23 +9,20 @@ export default new Vuex.Store({
     colorsPalette: [
       {
         index: 0,
-        hex: "FECD50",
         h: 100,
-        s: 80,
+        s: 95,
         l: 70
       },
       {
         index: 1,
-        hex: "4F8EF2",
         h: 200,
-        s: 80,
+        s: 95,
         l: 70
       },
       {
         index: 2,
-        hex: "239F60",
         h: 50,
-        s: 80,
+        s: 95,
         l: 70
       }
     ],
@@ -44,20 +41,21 @@ export default new Vuex.Store({
   mutations: {
     changePaletteColor(state, payload) {
       state.colorsPalette[payload.index].hex = payload.hex;
-      // index, newHex
     },
     changePaletteHSLuv(state, payload) {
-      state.colorsPalette[payload.index].h = payload.h,
-      state.colorsPalette[payload.index].s = payload.s,
-      state.colorsPalette[payload.index].l = payload.l
+      (state.colorsPalette[payload.index].h = payload.h),
+        (state.colorsPalette[payload.index].s = payload.s),
+        (state.colorsPalette[payload.index].l = payload.l);
     },
     addColor(state) {
-      const lastColor = state.colorsPalette[state.colorsPalette.length - 1];
-      console.log(lastColor);
-      // lastColor.index = lastColor.index + 1;
-      // state.colorsPalette.push({
-        // lastColor
-      // });
+      let lastColor = Object.assign(
+        {},
+        state.colorsPalette[state.colorsPalette.length - 1]
+      );
+      lastColor.index += 1;
+      // console.log(lastColor);
+
+      state.colorsPalette.push(lastColor);
       // state.colorsPalette[state.colorsPalette.length - 1].index += 1;
     },
     changeBackgroundColor(state, payload) {

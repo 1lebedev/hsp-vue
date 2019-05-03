@@ -1,15 +1,25 @@
 <template>
-  <div class="colorBlock" v-bind:style="{ backgroundColor: 'rgb(' + rgbColor + ')'}">
+  <div
+    class="colorBlock"
+    v-bind:style="{ backgroundColor: 'rgb(' + rgbColor + ')'}"
+    v-clipboard:copy="hex"
+  >
     <div
       v-if="isChromaExtremum"
       class="extremumPiska"
       v-bind:style="{backgroundColor: 'rgb(' + extremumDotColor + ')'}"
-    ></div>
+    >></div>
   </div>
 </template>
 
 
 <script>
+import Vue from "vue";
+import VueClipboard from "vue-clipboard2";
+import ColorConvert from "color-convert";
+
+Vue.use(VueClipboard);
+
 export default {
   name: "SpectrumColor",
   props: {
@@ -19,7 +29,10 @@ export default {
   },
   computed: {
     extremumDotColor: function() {
-      return (this.lightness < 60 ? [255, 255, 255] : [0, 0, 0])
+      return this.lightness < 60 ? [255, 255, 255] : [0, 0, 0];
+    },
+    hex: function() {
+      return ColorConvert.rgb.hex(this.rgbColor);
     }
   }
 };

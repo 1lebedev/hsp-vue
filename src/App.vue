@@ -25,21 +25,22 @@
 </template>
 
 <script>
-import Spectrum from "./components/Spectrum.vue";
+// import Spectrum from "./components/Spectrum.vue";
+import SpectrumLightness from "./components/SpectrumLightness.vue";
+import SpectrumContrast from "./components/SpectrumContrast.vue";
 import Palette from "./components/Palette.vue";
-import EqualizedPalette from "./components/EqualizedPalette.vue";
 
 export default {
   name: "app",
   components: {
-    Spectrum,
-    Palette,
-    EqualizedPalette
+    SpectrumContrast,
+    SpectrumLightness,
+    Palette
   },
   data: function() {
     return {
-      currentTab: "Palette",
-      tabs: ["Palette", "EqualizedPalette", "Spectrum"]
+      currentTab: "SpectrumContrast",
+      tabs: ["Palette", "SpectrumContrast", "SpectrumLightness"]
     };
   },
   computed: {

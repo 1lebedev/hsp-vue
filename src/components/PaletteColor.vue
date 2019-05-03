@@ -98,8 +98,7 @@ export default {
           ((this.color.s - treshold) / (100 - treshold)) * 100
         );
         return s;
-      },
-      set(value) {}
+      }
     },
     currentColorProperties() {
       const currentRGB = ColorConvert.hex.rgb(this.currentHex);

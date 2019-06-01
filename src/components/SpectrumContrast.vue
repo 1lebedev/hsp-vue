@@ -57,7 +57,7 @@ export default {
           currentContrast = colorlab.CIEDE2000(color1, color2);
           currentContrastDelta = Math.abs(currentContrast - this.c);
 
-          debugger;
+          // debugger;
           // if we have nothing to compare with — check other direction
           if (index == 0) {
             previousContrastDelta = currentContrastDelta;

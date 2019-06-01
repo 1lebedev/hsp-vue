@@ -29,18 +29,20 @@
 import SpectrumLightness from "./components/SpectrumLightness.vue";
 import SpectrumContrast from "./components/SpectrumContrast.vue";
 import Palette from "./components/Palette.vue";
+import Single from "./components/Single.vue";
 
 export default {
   name: "app",
   components: {
     SpectrumContrast,
     SpectrumLightness,
-    Palette
+    Palette,
+    Single
   },
   data: function() {
     return {
-      currentTab: "SpectrumContrast",
-      tabs: ["Palette", "SpectrumContrast", "SpectrumLightness"]
+      currentTab: "Single",
+      tabs: ["Single", "Palette", "SpectrumContrast", "SpectrumLightness"]
     };
   },
   computed: {

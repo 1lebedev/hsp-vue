@@ -26,7 +26,7 @@ export default new Vuex.Store({
         l: 70
       }
     ],
-    backgroundColor: "f5f5f5",
+    backgroundColor: "fff",
     dayThemeColors: {
       ff: "111111ff",
       33: "11111133",

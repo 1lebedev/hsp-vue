@@ -60,7 +60,7 @@ export default {
 @import "https://cdn.rawgit.com/h-ibaldo/Raleway_Fixed_Numerals/master/css/rawline.css";
 
 #app {
-  font-family: "rawline", Helvetica, Arial, sans-serif;
+  font-family: "rawline", Helvetica Neue, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: left;

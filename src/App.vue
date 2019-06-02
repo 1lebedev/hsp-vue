@@ -4,7 +4,7 @@
     v-bind:class="'mode-' + currentTabComponent"
     v-bind:style="{backgroundColor: '#' + backgroundColor}"
   >
-    <div class="sticky-header" v-bind:style="{backgroundColor: '#' + backgroundColor}">
+    <!-- <div class="sticky-header" v-bind:style="{backgroundColor: '#' + backgroundColor}">
       <div class="button-group">
         <button
           v-for="tab in tabs"
@@ -13,7 +13,7 @@
           v-on:click="currentTab = tab"
         >{{ tab }}</button>
       </div>
-    </div>
+    </div> -->
 
     <transition name="fade">
       <keep-alive>
@@ -125,7 +125,7 @@ body {
 }
 
 .tab {
-  padding: 96px 44px;
+  padding: 32px;
 }
 
 .fade-enter-active,

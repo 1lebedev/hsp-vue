@@ -1,22 +1,63 @@
 <template lang="pug">
 .single
-  .colorInput
+  .color-picker
+    color-picker(v-model="hexWithoutSharp")
+    .colorInput
     input(v-model="currentHex" placeholder="Enter HEX")
-  .button(v-bind:style="{ backgroundColor: '#' + currentHex}") Hello world
-  .button(v-bind:style="{ backgroundColor: '#' + lightenedhslVsWhite, color: '#' + lightenedhslVsbackground}") Hello world
-  .button(v-bind:style="{ backgroundColor: '#' + lightenedhslVsWhite, color: '#' + lightenedhsvVsbackground}") Hello world
-  //- .button(v-bind:style="{ backgroundColor: '#' + lightenedhslVsbackground}") Hello world
-  //- .label {{lightenedhsl}}
+    .currentColor(v-bind:style="{ backgroundColor: '#' + currentHex}")
+
+  .buttons  
+    .button(v-bind:style="{ backgroundColor: '#' + babiAlgoritmBackground, color: '#' + babiAlgoritmText}") Hello
+    .button(v-bind:style="{ backgroundColor: '#' + lightenedhslVsWhite, color: '#' + lightenedhsvVsbackground}") Hello
 </template>
 
 <script>
 import colorlab from "colorlab";
 import ColorConvert from "color-convert";
+import ColorSpaces from "color-space";
+import ColorPicker from 'vue-color-picker-wheel';
 
 export default {
   name: "Single",
-  components: {},
+  components: {ColorPicker},
   computed: {
+    hexWithoutSharp: {
+      get() {
+        return '#' + this.currentHex;
+      },
+      set(value) {
+        this.currentHex = value.substring(1);
+      }
+    },
+
+    babiAlgoritmBackground: function() {
+      const currentHexHSL = ColorConvert.hex.hsl(this.currentHex);
+      let resultHEX;
+      if (currentHexHSL[2] > 90) resultHEX = ColorConvert.hsl.hex([currentHexHSL[0], currentHexHSL[1], 85]);
+      else if (currentHexHSL[2] < 32) resultHEX = ColorConvert.hsl.hex([currentHexHSL[0], currentHexHSL[1], 95]);
+      else resultHEX = ColorConvert.hsl.hex([currentHexHSL[0], currentHexHSL[1], 95]);
+
+      return resultHEX;
+    },
+
+
+    babiAlgoritmText: function() {
+      const currentHexHSL = ColorConvert.hex.hsl(this.currentHex);
+      return ColorConvert.hsl.hex([currentHexHSL[0], currentHexHSL[1], 30]);
+    },
+
+    hspBackground: function() {
+      const currentHexLab = ColorConvert.hex.lab.raw(this.currentHex);
+      
+      return ColorConvert.rgb.hex(
+          ColorSpaces.hsluv.rgb([this.color.h, this.color.s, this.color.l])
+        );
+
+
+
+
+    },
+
     lightenedhslVsWhite: function() {
       // Check current contrast; decide if we should go dark or go light
       const baseHex = "ffffff";
@@ -155,26 +196,58 @@ export default {
   methods: {},
   data: function() {
     return {
-      currentHex: "198cff"
+      currentHex: "198cff",
+      colors: "#1CA085"
     };
   }
 };
 </script>
 
 <style scoped>
+
+.single {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.color-picker {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.colorInput {
+  margin: 0 16px 16px;
+}
+
+.currentColor {
+  display: block;
+  height: 32px;
+  width: 32px;
+  border-radius: 50%;
+  margin: 16px;
+}
+
+.buttons {
+
+}
+
 .button {
   display: inline-block;
   padding: 16px 20px;
   border-radius: 8px;
   color: black;
-  font-size: 18px;
-  line-height: 24px;
+  font-size: 24px;
+  line-height: 32px;
   font-family: "rawline", Helvetica Neue, Arial, sans-serif;
-  font-weight: 600;
-  margin-right: 8px;
+  font-weight: 700;
 }
 
-.colorInput {
-  margin-bottom: 32px;
+.button:not(:first-child) {
+  margin-left: 16px;
 }
+
+
 </style>
